@@ -4,6 +4,7 @@ import { getPokemonByName } from '@/lib/api/pokemon';
 import { Breadcrumb } from '@/components/layout/Breadcrumb';
 import { Badge } from '@/components/ui/Badge';
 import NotFound from './not-found';
+import { Metadata } from 'next'
 
 const typeColors: Record<string, string> = {
   normal: 'bg-gray-400 dark:bg-gray-600',
@@ -220,11 +221,13 @@ async function PokemonDetailsContent({ name }: PokemonDetailsContentProps) {
   }
 }
 
+type PokemonPageProps = {
+  params: { name: string }; // Directly an object
+};
+
 export default function PokemonDetails({
   params,
-}: {
-  params: { name: string };
-}) {
+}: PokemonPageProps) {
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen bg-gray-50 dark:bg-gray-900">
       <Breadcrumb />
@@ -235,7 +238,10 @@ export default function PokemonDetails({
   );
 }
 
-export async function generateMetadata({ params }: { params: { name: string } }) {
+// Update metadata function type
+export async function generateMetadata(
+  { params }: PokemonPageProps
+): Promise<Metadata> {
   try {
     const pokemon = await getPokemonByName(params.name);
     return {
