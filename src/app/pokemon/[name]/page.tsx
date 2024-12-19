@@ -44,7 +44,11 @@ function LoadingState() {
   );
 }
 
-async function PokemonDetailsContent({ name }: { name: string }) {
+type PokemonDetailsContentProps = {
+  name: string;
+};
+
+async function PokemonDetailsContent({ name }: PokemonDetailsContentProps) {
   try {
     const pokemon = await getPokemonByName(name);
 
