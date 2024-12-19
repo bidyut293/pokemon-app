@@ -222,17 +222,19 @@ async function PokemonDetailsContent({ name }: PokemonDetailsContentProps) {
 }
 
 type PokemonPageProps = {
-  params: { name: string }; // Directly an object
+  params: Promise<{ name: string }>; // Make params a Promise
 };
 
-export default function PokemonDetails({
+export default async function PokemonDetails({
   params,
 }: PokemonPageProps) {
+  const resolvedParams = await params; // Resolve the promise
+
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen bg-gray-50 dark:bg-gray-900">
       <Breadcrumb />
       <Suspense fallback={<LoadingState />}>
-        <PokemonDetailsContent name={params.name} />
+        <PokemonDetailsContent name={resolvedParams.name} />
       </Suspense>
     </div>
   );
@@ -242,8 +244,9 @@ export default function PokemonDetails({
 export async function generateMetadata(
   { params }: PokemonPageProps
 ): Promise<Metadata> {
+  const resolvedParams = await params; // Resolve the promise
   try {
-    const pokemon = await getPokemonByName(params.name);
+    const pokemon = await getPokemonByName(resolvedParams.name);
     return {
       title: `${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} | Pokemon Search App`,
       description: `Learn about ${pokemon.name}'s stats, abilities, and more.`,
